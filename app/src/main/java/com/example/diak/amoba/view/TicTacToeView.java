@@ -2,12 +2,14 @@ package com.example.diak.amoba.view;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.diak.amoba.model.TicTacToeModel;
 
@@ -87,17 +89,24 @@ public class TicTacToeView extends View {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            int tX = ((int) event.getX()) / (getWidth() / 3);
-            int tY = ((int) event.getY()) / (getHeight() / 3);
+            int tX =((int) event.getX())/(getWidth()/3);
+            int tY =((int) event.getY())/(getHeight()/3);
             if (tX < 3 && tY < 3 && TicTacToeModel.getInstance().getFieldContent(tX,tY)
                     == TicTacToeModel.EMPTY) {
-
                 TicTacToeModel.getInstance().setFieldContent(tX,tY,TicTacToeModel.getInstance
                         ().getNextPlayer());
-                TicTacToeModel.getInstance().changeNextPlayer();
+                if (TicTacToeModel.isWin()){
+                    Toast.makeText(TicTacToeView.this.getContext(), "Nyert valamelyik", Toast.LENGTH_SHORT).show();
+                    Intent i = new Intent(TicTacToeView.this.getContext(), com.example.diak.amoba.MainActivity.class);
+                    TicTacToeView.this.getContext().startActivity(i);
+                }
+
+                else {
+                    TicTacToeModel.getInstance().changeNextPlayer();
+                }
+
                 invalidate();
             }
-
         }
         return super.onTouchEvent(event);
     }
